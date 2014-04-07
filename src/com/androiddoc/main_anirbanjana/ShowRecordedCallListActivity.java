@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
 import android.app.AlertDialog;
 import android.app.ListActivity;
@@ -44,7 +45,6 @@ public class ShowRecordedCallListActivity extends ListActivity {
 	}
 	
 	public void createRecCallList() {
-		Toast.makeText(this,  "No call record found.", Toast.LENGTH_LONG).show();
 //		File yourDir = new File(this.getApplicationContext().getFilesDir() + "/system_sound");
 		File yourDir = new File(Environment.getExternalStorageDirectory() + "/rec_sound_by_anirban");
 		
@@ -85,10 +85,9 @@ public class ShowRecordedCallListActivity extends ListActivity {
 					String time 	    = (file_name.substring(11, 22)).replaceAll("_", ":");
 					String callState  	= file_name.substring(23, 35);
 					String phoneNo    	= file_name.substring(36, (file_name.length()-4));
-					
+					String fileLength   = getFileLength(Environment.getExternalStorageDirectory() + "/rec_sound_by_anirban/" + file_name);
 					
 					Log.w("Filename", "Filename: " + file_name);
-					
 					Log.w("Filename", "date: " + date);
 					Log.w("Filename", "time: " + time);
 					Log.w("Filename", "callState: " + callState);
@@ -96,8 +95,9 @@ public class ShowRecordedCallListActivity extends ListActivity {
 	
 					HashMap<String, String> map = new HashMap<String, String>();
 					// adding each child node to HashMap key => value
+					
 					map.put(KEY_ID, file_name);
-					map.put(KEY_PHONE_NO, phoneNo + " ("+callState+")");
+					map.put(KEY_PHONE_NO, phoneNo + " ("+callState+")" + " ### " + fileLength);
 					map.put(KEY_CALL_STATE,callState);
 					map.put(KEY_DATE_TIME, date + "    " + time);
 	
@@ -114,6 +114,29 @@ public class ShowRecordedCallListActivity extends ListActivity {
 
 	} 
 	
+	private String getFileLength(String myFileUrl) 
+	{
+		String time = "00:00:00";
+		try 
+		{
+			MediaPlayer mp = MediaPlayer.create(this, Uri.parse(myFileUrl));
+			int duration = mp.getDuration();
+			mp.release();
+			/*convert millis to appropriate time*/
+			time = String.format("%02d:%02d:%02d", 
+						TimeUnit.MILLISECONDS.toHours(duration),
+			            TimeUnit.MILLISECONDS.toMinutes(duration),
+			            TimeUnit.MILLISECONDS.toSeconds(duration) - 
+			            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(duration))
+			        );
+		} 
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+		}
+		return time;
+	}
+
 	//On select from the list show data
 	protected void onListItemClick(ListView l, View v, int position, long id) 
 	{

@@ -66,26 +66,7 @@ public class CallRecordingService extends Service {
 			}
 //			String selectedPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Android/data/" + packageName + "/system_sound";
 
-			if (getFromPreference("call_rec_type").equalsIgnoreCase("VOICE_CALL"))
-			{
-				Log.d("Recording", "VOICE_CALL");
-				myRec.setAudioSource(MediaRecorder.AudioSource.VOICE_CALL);
-			}
-			else if (getFromPreference("call_rec_type").equalsIgnoreCase("VOICE_RECOGNITION"))
-			{
-				Log.d("Recording", "VOICE_RECOGNITION");
-				myRec.setAudioSource(MediaRecorder.AudioSource.VOICE_RECOGNITION);
-			}
-			else if (getFromPreference("call_rec_type").equalsIgnoreCase("MIC"))
-			{
-				Log.d("Recording", "Mic");
-				myRec.setAudioSource(MediaRecorder.AudioSource.MIC);
-			}
-			else
-			{
-				Log.d("Recording", "VOICE_CALL");
-				myRec.setAudioSource(MediaRecorder.AudioSource.VOICE_CALL);
-			}
+			myRec.setAudioSource(MediaRecorder.AudioSource.VOICE_CALL);
 			myRec.setOutputFormat(MediaRecorder.OutputFormat.AMR_NB);
 			myRec.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
 //			myRec.setOutputFile(Environment.getExternalStorageDirectory().getPath()+"/my_rec_voice.mp3");
